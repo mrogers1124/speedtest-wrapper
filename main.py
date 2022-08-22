@@ -13,18 +13,20 @@ for path in [datapath, rawpath, errorpath]:
         os.makedirs(path)
 
 
-# Run speedtest, returning the CompletedProcess object
-def run_speedtest() -> subprocess.CompletedProcess:
+# Run speedtest, saving the raw data on success or an error log on failure
+def run_speedtest() -> None:
     result = subprocess.run(['speedtest', '--format=json'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    return result
 
-
-def process_result(result: subprocess.CompletedProcess) -> None:
-    # Was the speedtest a success or failure?
+    # If process was unsuccessful, route the output from stderr to the error folder
     if result.returncode:
         output: bytes = result.stderr
+        out_ext = '.log'
+        out_dir = errorpath
+    # Otherwise, route the output from stdout to the raw data folder
     else:
         output: bytes = result.stdout
+        out_ext = '.json'
+        out_dir = rawpath
 
     # Extract the JSON formatted data from the process output
     output_str = output.decode()
@@ -34,20 +36,12 @@ def process_result(result: subprocess.CompletedProcess) -> None:
     # Get the timestamp from the JSON formatted data
     timestamp = data['timestamp']
 
-    # Save JSON formatted data in raw folder
-    fn_raw = str(timestamp) + '.json'
-    fp_raw = os.path.join(rawpath, fn_raw)
-    with open(fp_raw, 'w') as file:
-        file.write(data_str)
-
-    # If process was unsuccessful, save the entire output to the error log
-    if result.returncode:
-        fn_raw = str(timestamp) + '.log'
-        fp_error = os.path.join(errorpath, fn_raw)
-        with open(fp_error, 'w') as file:
-            file.write(output_str)
+    # Write the file
+    out_fn = timestamp + out_ext
+    out_fp = os.path.join(out_dir, out_fn)
+    with open(out_fp, 'wb') as file:
+        file.write(output)
 
 
 if __name__ == '__main__':
-    result = run_speedtest()
-    process_result(result)
+    run_speedtest()
