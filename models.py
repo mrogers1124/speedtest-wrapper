@@ -2,7 +2,7 @@
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy.types import Boolean, DateTime, Integer, Float, Text
+from sqlalchemy.types import Boolean, Integer, Float, Text
 
 
 Base = declarative_base()
@@ -12,7 +12,7 @@ Base = declarative_base()
 class Interface(Base):
     __tablename__ = 'interface'
 
-    interface_uid = Column(Integer, primary_key=True)
+    interface_uid = Column(Integer, primary_key=True, autoincrement=True)
     internalIp = Column(Text)
     name = Column(Text)
     macAddr = Column(Text)
@@ -29,7 +29,7 @@ class Interface(Base):
 class Server(Base):
     __tablename__ = 'server'
 
-    server_uid = Column(Integer, primary_key=True)
+    server_uid = Column(Integer, primary_key=True, autoincrement=True)
     id = Column(Integer)
     host = Column(Text)
     port = Column(Integer)
@@ -38,7 +38,7 @@ class Server(Base):
     country = Column(Text)
     ip = Column(Text)
 
-    results = relationship('Result', back_populates='interface')
+    results = relationship('Result', back_populates='server')
 
     def __repr__(self):
         return f'<Server {self.server_uid}>'
@@ -48,8 +48,8 @@ class Server(Base):
 class Result(Base):
     __tablename__ = 'result'
 
-    result_uid = Column(Integer, primary_key=True)
-    timestamp = Column(DateTime)
+    result_uid = Column(Integer, primary_key=True, autoincrement=True)
+    timestamp = Column(Text)
 
     # Ping results
     ping_jitter = Column(Float)

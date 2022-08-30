@@ -1,10 +1,17 @@
 # speedtest-wrapper
 
-A simple wrapper for automating Ookla Speedtest CLI runs.
+A simple wrapper for automating Ookla Speedtest CLI runs
+and loading the resulting raw data into a SQLite3 database.
 
 ## Usage
 
-Install speedtest and schedule a cron job to run `main.py` as needed.
+Install speedtest from the [Ookla website](https://www.speedtest.net/).
+
+This repository contains two runnable modules:
+* `main.py` runs the speedtest program and saves the raw result.
+* `load.py` loads the raw data into a SQLite3 database.
+
+Schedule a cron job to run `main.py` and `load.py` as needed.
 Make sure your `PATH` contains the location of the `speedtest` binary.
 
 ```
@@ -12,16 +19,10 @@ crontab:
 # m h  dom mon dow   command
 PATH=$PATH:/directory/containing/speedtest/
 0 * * * * /usr/bin/python3 /path/to/main.py
+30 0 * * * /usr/bin/python3 /path/to/load.py
 ```
 
-The `main.py` script will save raw data and error logs
-to `~/data` by default.
-
-## Future Plans
-
-The user may wish to load the raw data into a more structured data store.
-Before implementing this functionality, I need to collect lots of raw data
-to better understand its features and plan the logic of the data load.
+Raw data and error logs are saved in `~/data` by default.
 
 ## License
 

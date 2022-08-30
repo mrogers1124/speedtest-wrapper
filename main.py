@@ -6,9 +6,11 @@ import subprocess
 # Data paths
 datapath = os.path.expanduser('~/data')
 rawpath = os.path.join(datapath, 'raw')
+processedpath = os.path.join(datapath, 'processed')
 errorpath = os.path.join(datapath, 'error')
 
-for path in [datapath, rawpath, errorpath]:
+
+for path in [datapath, rawpath, processedpath, errorpath]:
     if not os.path.isdir(path):
         os.makedirs(path)
 
