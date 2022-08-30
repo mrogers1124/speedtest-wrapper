@@ -9,7 +9,7 @@ from models import Base, Interface, Server, Result
 
 # Database path and engine
 dbpath = os.path.join(datapath, 'results.sqlite3')
-engine = create_engine(f'sqlite:///{dbpath}', echo=True)
+engine = create_engine(f'sqlite:///{dbpath}')
 Session = sessionmaker(bind=engine)
 
 # Create DB tables if needed
